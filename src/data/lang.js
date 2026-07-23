@@ -606,6 +606,8 @@ module.exports = {
     add_tag: "Ajouter une nouvelle étiquette",
     advanced_search: "Recherche avancée",
     allow_cookies: "Autoriser les cookies",
+    cookieinfo: "Nous utilisons des cookies pour vous garantir la meilleure expérience sur notre site web.",
+    more_info: "Plus d'infos",
     back: "Retour",
     cancel: "Annuler",
     city: "Ville",
