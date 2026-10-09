@@ -20,6 +20,10 @@ const transformResults = resp => {
     })
   }
 
+  if (resp.aggregations && resp.aggregations.clusters && resp.aggregations.clusters.buckets) {
+    r.clusters = resp.aggregations.clusters.buckets
+  }
+
   if (resp.hits.hits.length > 0) {
     resp.hits.hits.forEach(hit => {
       // eslint-disable-next-line no-underscore-dangle
@@ -41,6 +45,11 @@ const transformResults = resp => {
       item.city = h.city
       item.place = h.place
       item.approximate = h.approximate
+
+      if (h.locations && h.locations.length) {
+        const location = h.locations.find(item => item.shooting_location) || h.locations[0]
+        item.location = { lat: Number(location.lat), lon: Number(location.lon) }
+      }
 
       r.items.push(item)
     })
@@ -263,6 +272,17 @@ const search = params => {
       if (params.year_from) query.where.push({ "year >=": `${params.from}` })
       if (params.year_to) query.where.push({ "year <=": `${params.year_to}` })
     }
+
+    if (params.gb) {
+      const [north, west, south, east] = params.gb.split(",").map(Number)
+      if ([north, west, south, east].every(Number.isFinite)) {
+        query.map = {
+          bounds: { north, south, east, west },
+          clustered: params.clustered === true || params.clustered === "true",
+          precision: Number(params.gz) || 10,
+        }
+      }
+    }
     // if there's a range set
 
     const body = {
@@ -284,7 +304,7 @@ const search = params => {
       body.from = params.from || 0
     }
 
-    if (params.from === 0) {
+    if (params.from === 0 && !params.disableAggregatedYears) {
       body.aggs = {
         years: {
           terms: {

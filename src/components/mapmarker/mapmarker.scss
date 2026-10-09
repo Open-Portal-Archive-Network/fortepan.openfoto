@@ -1,0 +1,124 @@
+.mapmarker {
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+
+  &__thumbnails {
+    position: relative;
+    margin-bottom: rem(12px);
+    padding: rem(3px);
+    border-radius: rem(7px);
+
+    .theme--light & {
+      background-color: $light-base;
+      box-shadow: 0 0 0 1px rgba($dark-base, 0.04), 0 12px 36px rgba($dark-base, 0.12);
+    }
+
+    .theme--dark & {
+      background-color: $dark-secondary;
+      box-shadow: 0 0 0 1px rgba($light-base, 0.04) inset, 0 8px 24px rgba($dark-base, 0.12);
+    }
+
+    &:before,
+    &:after {
+      position: absolute;
+      bottom: rem(-8px);
+      left: 50%;
+      width: 0;
+      height: 0;
+      border: 8px solid transparent;
+      border-bottom: 0;
+      content: "";
+      transform: translateX(-50%);
+    }
+
+    &:before {
+      .theme--light & { border-top-color: rgba($dark-base, 0.04); }
+      .theme--dark & { border-top-color: rgba($light-base, 0.04); }
+    }
+
+    &:after {
+      bottom: rem(-6px);
+      .theme--light & { border-top-color: $light-base; }
+      .theme--dark & { border-top-color: $dark-secondary; }
+    }
+
+    .photos-thumbnail {
+      min-width: rem(96px);
+      margin: 0;
+    }
+
+    .photos-thumbnail__image {
+      height: rem(80px);
+      margin: 0;
+    }
+
+    .photos-thumbnail__meta { display: none; }
+  }
+
+  &__thumbnail-wrapper { border-radius: rem(4px); }
+
+  &__pager {
+    position: absolute;
+    top: 50%;
+    display: none;
+    width: 2rem;
+    height: 2rem;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: opacity 0.1s ease-out;
+
+    .is-multiple & { display: block; }
+    .mapmarker__thumbnails:hover & { opacity: 1; }
+
+    &--prev { left: -2.5rem; }
+    &--next { right: -2.5rem; }
+
+    .theme--light & {
+      background-color: $light-base !important;
+      box-shadow: 0 0 0 1px rgba($dark-base, 0.04), 0 12px 36px rgba($dark-base, 0.12);
+    }
+
+    .theme--dark & {
+      background-color: $dark-secondary !important;
+      box-shadow: 0 0 0 1px rgba($light-base, 0.04) inset, 0 8px 24px rgba($dark-base, 0.12);
+    }
+  }
+}
+
+.map-cluster-marker {
+  display: block;
+  width: rem(8px);
+  height: rem(8px);
+  margin: 0 auto;
+  border-radius: rem(26px);
+  background: $red;
+  color: $light-base;
+  font-size: rem(14px);
+  line-height: rem(26px);
+  text-align: center;
+  outline: 2px solid;
+
+  .theme--light & {
+    outline-color: rgba($light-base, 0.64);
+    box-shadow: 0 4px 12px rgba($dark-base, 0.32);
+  }
+
+  .theme--dark & {
+    outline-color: rgba($dark-base, 0.5);
+    box-shadow: 0 4px 12px rgba($dark-base, 0.32);
+  }
+
+  .is-multiple &,
+  .is-single & {
+    width: auto;
+    height: auto;
+    min-width: rem(26px);
+    padding: 0 rem(12px);
+    display: inline-block;
+  }
+
+  .is-over-limit & {
+    padding: rem(4px) rem(16px);
+  }
+}

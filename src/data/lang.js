@@ -149,6 +149,10 @@ module.exports = {
       remove_action_label: "Megtekintés",
     },
     projects: "Projektek",
+    map: {
+      menu_label: "Térkép",
+      no_results: "Nincs találat ezen a területen",
+    },
   },
   en: {
     about_us: "About us",
@@ -300,6 +304,10 @@ module.exports = {
       remove_action_label: "Show",
     },
     projects: "Projects",
+    map: {
+      menu_label: "Map",
+      no_results: "No results found in this area",
+    },
   },
   it: {
     about_us: "Chi siamo",
@@ -451,6 +459,10 @@ module.exports = {
       remove_action_label: "Mostra",
     },
     projects: "Progetti",
+    map: {
+      menu_label: "Mappa",
+      no_results: "Nessun risultato trovato in quest'area",
+    },
 
   },
   pl: {
@@ -600,6 +612,10 @@ module.exports = {
       remove_action_label: "Pokaż",
     },
     projects: "Projekty",
+    map: {
+      menu_label: "Mapa",
+      no_results: "Nie znaleziono wyników w tym obszarze",
+    },
   },
   fr: {
     about_us: "À propos de nous",
@@ -751,5 +767,9 @@ module.exports = {
       remove_action_label: "Afficher",
     },
     projects: "Projets",
+    map: {
+      menu_label: "Carte",
+      no_results: "Aucun résultat dans cette zone",
+    },
   },
 }

@@ -1,0 +1,13 @@
+<div class="mapview" data-controller="mapview"
+  data-google-maps-key="{{ siteConfig.GOOGLE_MAPS_KEY }}"
+  data-google-maps-id="{{ siteConfig.GOOGLE_MAPS_ID }}"
+  data-action="mapview:show@document->mapview#show
+               mapview:load@document->mapview#load
+               popstate@window->mapview#onPopState
+               theme:toggleTheme@document->mapview#toggleMapStyles
+               mapmarker:photoSelected@document->mapview#onMarkerPhotoSelected"
+>
+  <div class="map" data-mapview-target="map"></div>
+</div>
+
+{% include mapmarker/mapmarker.liquid %}

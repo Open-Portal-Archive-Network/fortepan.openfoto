@@ -6,7 +6,7 @@ export const getLocale = () => {
 }
 
 export const lang = key => {
-  const l = langData[getLocale()]
+  const l = langData[getLocale()] || langData.en
   const val = l[key] ? l[key] : key
   return val.replace ? val.replace(/(?:\r\n|\r|\n)/g, "<br/>") : val
 }

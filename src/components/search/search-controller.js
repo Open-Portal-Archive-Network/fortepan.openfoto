@@ -1,6 +1,7 @@
 import { Controller } from "stimulus"
 
-import { trigger, getLocale } from "../../js/utils"
+import { trigger, getLocale, getURLParams } from "../../js/utils"
+import { appState } from "../../js/app"
 
 export default class extends Controller {
   static get targets() {
@@ -18,7 +19,14 @@ export default class extends Controller {
     this.inputTarget.selectizeControl.addTagNode(this.inputTarget.selectizeControl.inputTarget.value)
     const q = `?q=${this.inputTarget.selectizeControl.value.join(", ")}`
 
-    if (window.location.pathname.indexOf("/photos") === -1) {
+    if (appState("is-map")) {
+      const params = getURLParams()
+      delete params.gb
+      params.q = this.inputTarget.selectizeControl.value.join(", ")
+      window.history.pushState(null, null, `/${getLocale()}/map/?${new URLSearchParams(params).toString()}`)
+      this.inputTarget.selectizeControl.blur()
+      trigger("mapview:load")
+    } else if (window.location.pathname.indexOf("/photos") === -1) {
       window.location = `/${getLocale()}/photos/${q}`
     } else {
       trigger("photos:historyPushState", {

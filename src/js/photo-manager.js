@@ -49,13 +49,13 @@ const loadPhotoData = async (params, silent, lockContext) => {
   photoData.result.latestItems = resp.items
 
   // storing the total number
-  if (!lockContext && resp.total) {
+  if (!lockContext && typeof resp.total !== "undefined") {
     photoData.result.total = resp.total
   }
 
   // storing the aggregated years (photo count per all year in search range) in the results
   // -- only once per search context
-  if (!photoData.result.years || !photoData.result.total || (!lockContext && resp.years)) {
+  if (!params.disableAggregatedYears && (!photoData.result.years || !photoData.result.total || (!lockContext && resp.years))) {
     // load the total aggregated years if id or year is present (in wich case there's only one year loaded)
     if (!resp.years || resp.years.length <= 1) {
       const contextParams = {}
@@ -80,6 +80,8 @@ const loadPhotoData = async (params, silent, lockContext) => {
     years: photoData.result.years,
     reverseOrder: params && params.reverseOrder,
   }
+
+  if (resp.clusters) result.clusters = resp.clusters
 
   if (!silent) {
     // dispatch an event that new photos have been loaded in the search context
@@ -181,7 +183,7 @@ const loadMorePhotoDataInContext = async (insertBefore = false) => {
 }
 
 const getLastPhotoDataInContext = () => {
-  if (hasData()) {
+  if (hasData() && photoData.result.years) {
     const lastYear =
       photoData.context && photoData.context.year > 0
         ? photoData.result.years.find(item => parseInt(item.year, 10) === parseInt(photoData.context.year, 10))
@@ -244,7 +246,7 @@ const selectNextPhoto = async () => {
 }
 
 const getFirstPhotoDataInContext = () => {
-  if (hasData()) {
+  if (hasData() && photoData.result.years) {
     console.log('contect', photoData.context)
     const firstYear =
       photoData.context && photoData.context.year > 0

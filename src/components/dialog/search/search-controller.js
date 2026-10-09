@@ -16,7 +16,14 @@ export default class extends Controller {
 
     const q = this.inputTarget.selectizeControl.value.join(", ")
 
-    if (window.location.pathname.indexOf("/photos") === -1 || appState("is-lists")) {
+    if (appState("is-map")) {
+      const params = getURLParams()
+      delete params.gb
+      params.q = q
+      window.history.pushState(null, null, `/${getLocale()}/map/?${new URLSearchParams(params).toString()}`)
+      this.hide()
+      trigger("mapview:load")
+    } else if (window.location.pathname.indexOf("/photos") === -1 || appState("is-lists")) {
       window.location = `/${getLocale()}/photos/?q=${q}`
     } else {
       trigger("photos:historyPushState", {
