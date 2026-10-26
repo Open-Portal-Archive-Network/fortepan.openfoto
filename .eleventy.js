@@ -1,5 +1,7 @@
 const inlineSVG = require("./plugins/inlineSVG")
 const htmlmin = require("html-minifier")
+const { createProxyMiddleware } = require("http-proxy-middleware")
+const siteConfig = require("./src/data/siteConfig")
 
 module.exports = eleventyConfig => {
   // Disable .gitignore and use eleventy's own ignore file instead
@@ -27,6 +29,17 @@ module.exports = eleventyConfig => {
       year: "numeric",
     })
     return dateFormat.format(new Date(parseInt(timestamp)))
+  })
+
+  // Proxy /api to the backend in development so the browser doesn't hit CORS
+  eleventyConfig.setBrowserSyncConfig({
+    middleware: [
+      createProxyMiddleware("/api", {
+        target: siteConfig.DEV_API_PROXY_TARGET,
+        changeOrigin: true,
+        cookieDomainRewrite: "",
+      }),
+    ],
   })
 
   // Minify html in production

@@ -4,8 +4,11 @@ module.exports = {
   GOOGLE_MAPS_ID: "22d913cfa0f040323e8277e6",
   SITE: "https://openfoto.org",
   SITE_DEV: "https://openfoto.org",
-  BACKEND: "https://api.openfoto.org",
-  BACKEND_DEV: "https://back.openfoto.org",
+  // In development, API calls go to the local dev server, which proxies them
+  // to DEV_API_PROXY_TARGET (see .eleventy.js) to avoid CORS on localhost
+  BACKEND: process.env.ENV === "development" ? "" : "https://api.openfoto.org",
+  BACKEND_DEV: process.env.ENV === "development" ? "" : "https://back.openfoto.org",
+  DEV_API_PROXY_TARGET: "https://backend.fortepan.eu",
   PHOTO_SOURCE: "https://djhqbtjenf12x.cloudfront.net",
   PHOTO_BUCKET: "fortepanproject",
   THUMBNAILS_QUERY_LIMIT: 40,
