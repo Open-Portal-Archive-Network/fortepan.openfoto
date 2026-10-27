@@ -409,7 +409,10 @@
 }
 
 body[data-lang="hu"] .header-nav__link.lang-hu,
-body[data-lang="en"] .header-nav__link.lang-en {
+body[data-lang="en"] .header-nav__link.lang-en,
+body[data-lang="it"] .header-nav__link.lang-it,
+body[data-lang="pl"] .header-nav__link.lang-pl,
+body[data-lang="fr"] .header-nav__link.lang-fr {
   background-color: rgba($red, 0.1);
   position: relative;
 
