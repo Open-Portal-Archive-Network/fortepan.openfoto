@@ -1,7 +1,13 @@
+// In development a personal key can be set in .env (GOOGLE_MAPS_KEY_DEV),
+// because the production key only allows the live site's domain.
+// .env is loaded in .eleventy.js, as this file is also bundled for the browser
+const useDevMapsKey =
+  process.env.ENV === "development" && typeof process !== "undefined" && process.env.GOOGLE_MAPS_KEY_DEV
+
 module.exports = {
   ENV: process.env.ENV,
-  GOOGLE_MAPS_KEY: "AIzaSyBG4swKwP0ZAFEqRT8Fa1VSn8jzD_sTH7Y",
-  GOOGLE_MAPS_ID: "22d913cfa0f040323e8277e6",
+  GOOGLE_MAPS_KEY: useDevMapsKey ? process.env.GOOGLE_MAPS_KEY_DEV : "AIzaSyBG4swKwP0ZAFEqRT8Fa1VSn8jzD_sTH7Y",
+  GOOGLE_MAPS_ID: useDevMapsKey ? process.env.GOOGLE_MAPS_ID_DEV || "DEMO_MAP_ID" : "22d913cfa0f040323e8277e6",
   SITE: "https://openfoto.org",
   SITE_DEV: "https://openfoto.org",
   // In development, API calls go to the local dev server, which proxies them

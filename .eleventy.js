@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const inlineSVG = require("./plugins/inlineSVG")
 const htmlmin = require("html-minifier")
 const { createProxyMiddleware } = require("http-proxy-middleware")
