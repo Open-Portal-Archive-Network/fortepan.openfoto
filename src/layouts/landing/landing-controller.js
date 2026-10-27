@@ -89,16 +89,25 @@ export default class extends Controller {
     // to get the functionalities the timeline requires
     await photoManager.loadPhotoData(params)
 
-    // load the previous and next photos too - the # of photos is defined in params.size
-    await photoManager.loadMorePhotoDataInContext()
-    await photoManager.loadMorePhotoDataInContext(true) // passing true loads a set before the first
-
     // select the photo by the id to get the right date displayed on the timeline
     photoManager.selectPhotoById(id, false)
 
-    this.renderThumbnails()
-
+    // show the timeline first, then the thumbnail skeletons under it
     this.element.querySelector(".photos-timeline").classList.add("is-visible")
+    this.thumbnailsTarget.querySelectorAll(".photos-thumbnail").forEach(placeholder => {
+      placeholder.classList.add("is-visible")
+    })
+
+    // load the previous and next photos too - the # of photos is defined in params.size
+    await Promise.all([
+      photoManager.loadMorePhotoDataInContext(),
+      photoManager.loadMorePhotoDataInContext(true), // passing true loads a set before the first
+    ])
+
+    // select again, as the photos loaded before the cover photo shift its index
+    photoManager.selectPhotoById(id, false)
+
+    this.renderThumbnails()
   }
 
   // thumbnail row under the timeline (ported from fortepan.hu master)
