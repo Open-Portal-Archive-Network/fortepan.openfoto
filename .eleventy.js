@@ -34,15 +34,18 @@ module.exports = eleventyConfig => {
   })
 
   // Proxy /api to the backend in development so the browser doesn't hit CORS
-  eleventyConfig.setBrowserSyncConfig({
-    middleware: [
-      createProxyMiddleware("/api", {
-        target: siteConfig.DEV_API_PROXY_TARGET,
-        changeOrigin: true,
-        cookieDomainRewrite: "",
-      }),
-    ],
-  })
+  // (only when siteConfig.js sets DEV_API_PROXY_TARGET)
+  if (siteConfig.DEV_API_PROXY_TARGET) {
+    eleventyConfig.setBrowserSyncConfig({
+      middleware: [
+        createProxyMiddleware("/api", {
+          target: siteConfig.DEV_API_PROXY_TARGET,
+          changeOrigin: true,
+          cookieDomainRewrite: "",
+        }),
+      ],
+    })
+  }
 
   // Minify html in production
   if (process.env.ENV === "production") {
