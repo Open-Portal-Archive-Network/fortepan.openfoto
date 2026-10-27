@@ -22,3 +22,4 @@ src/static/autocomplete-hu.json
 # OS related
 .DS_Store
 .claude/
+src/data/siteConfig.js

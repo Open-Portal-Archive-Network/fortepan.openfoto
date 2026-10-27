@@ -28,7 +28,8 @@ src/
   layouts/<name>/    page layouts, same trio; base/base.liquid is the root layout
   pages/<locale>/    markdown pages per locale (en, hu, it, pl, fr); front matter picks layout + permalink
   data/              Eleventy global data, ALSO imported by browser JS (see warning below)
-    siteConfig.js    URLs, keys, breakpoints, locales
+    siteConfig.js    URLs, keys, breakpoints, locales. LOCAL ONLY (git-ignored since Enzo's
+                     a2d098c); copy from siteConfig.js.example. Shared changes go in the .example
     lang.js          all UI strings: { hu: {...}, en: {...}, it, pl, fr }
   js/                app.js (body-class app state), utils.js, photo-manager.js, list-manager.js, stimulus.js
   scss/              globals: utils (rem()), breakpoints, colors, typography, helpers, layout, scopes
@@ -80,7 +81,8 @@ Use Enzo's map feature (commit `5eece40`) as the reference: `src/components/mapv
 
 - `api.openfoto.org` / `back.openfoto.org` are **not live yet**. In development `BACKEND` and `BACKEND_DEV` are `""`, and browser-sync middleware in `.eleventy.js` proxies `/api` to `DEV_API_PROXY_TARGET` (`https://backend.fortepan.eu`) to avoid CORS. Once Enzo's backend is live, change `DEV_API_PROXY_TARGET`.
 - The old backend has **no geo support**: the map loads, but it shows no pins until the new backend is available.
-- Google Maps: the prod key only allows the live domain. Dana's personal dev key is in `.env` as `GOOGLE_MAPS_KEY_DEV` (git-ignored; never print or commit it); dev uses `DEMO_MAP_ID` unless `GOOGLE_MAPS_ID_DEV` is set.
+- If `src/data/siteConfig.js` is missing (e.g. after a pull), the build fails silently: no CSS/JS. Recreate it from the `.example` with real values, then restart `npm run dev` (webpack watch doesn't recover from a failed first build).
+- Google Maps: the prod key only allows the live domain (Enzo rotated it in Oct 2026; the new one isn't in the repo). Dana's personal dev key is in `.env` as `GOOGLE_MAPS_KEY_DEV` (git-ignored; never print or commit it); dev uses `DEMO_MAP_ID` unless `GOOGLE_MAPS_ID_DEV` is set.
 
 ## Working with Dana
 
