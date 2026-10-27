@@ -209,9 +209,16 @@
   border-radius: 0;
 }
 
+// the row stays collapsed until the timeline has loaded, then opens up
 .home__thumbnails-wrapper {
   width: 100%;
   overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.8s $ease-out-expo;
+
+  .home__photos.is-loaded & {
+    max-height: rem(200px);
+  }
 }
 
 .home__thumbnails {

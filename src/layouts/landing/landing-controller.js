@@ -94,6 +94,7 @@ export default class extends Controller {
 
     // show the timeline first, then the thumbnail skeletons under it
     this.element.querySelector(".photos-timeline").classList.add("is-visible")
+    this.element.querySelector(".home__photos").classList.add("is-loaded")
     this.thumbnailsTarget.querySelectorAll(".photos-thumbnail").forEach(placeholder => {
       placeholder.classList.add("is-visible")
     })
