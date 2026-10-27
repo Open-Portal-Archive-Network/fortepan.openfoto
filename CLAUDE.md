@@ -74,6 +74,8 @@ Use Enzo's map feature (commit `5eece40`) as the reference: `src/components/mapv
 
 - **`src/data/*.js` runs in two places**: Node (Eleventy build) and the browser (webpack imports `siteConfig.js` and `lang.js`). Never `require` Node-only modules (`dotenv`, `fs`) there, and guard `process` access: only `process.env.ENV` is defined in the browser (webpack DefinePlugin). `.env` is loaded in `.eleventy.js`. A mistake here kills all JS: no photos, half-styled page.
 - `src/layouts/map/map.scss` uses `torem(...)`, which isn't defined (the helper is `rem()`), so those `top:` rules compile to invalid CSS and are ignored. Use `rem()`; ask Dana before fixing Enzo's code.
+- `torem()` exists on `master` (fortepan.hu) but not on this line; code copied from master must be converted to `rem()`.
+- The old backend (`backend.fortepan.eu`) is slow: homepage requests take ~5–15 s each. That's server latency, not a code problem; design loading states for it.
 - `api/lists.js` and `api/tags.js` switch between `*_DEV` and prod URLs via `appState("is-dev")`; `api/search.js` always uses `config.BACKEND`.
 - Ignore the Forestry-generated commits and `notifications.json` churn; content editors own those.
 
@@ -89,3 +91,34 @@ Use Enzo's map feature (commit `5eece40`) as the reference: `src/components/mapv
 - Work on a branch per change; `openfoto` is the working branch, `master` is upstream.
 - Before calling something done: check it in the browser preview (`localhost:8080`), including the console for errors.
 - Explain what changed and why in plain terms; mention the files so Dana can open them in Cursor and review the diff in GitHub Desktop.
+
+## Session log (read this first next time)
+
+### Branches and code families
+- `master` = live fortepan.hu. `fortepan.org` → `openfoto` = the multi-collection line this fork is built on (split from master Jan 2023). Features on fortepan.hu may simply not exist here; check master (`git show origin/master:<path>`) and port them.
+- `openfoto` (pushed, matches GitHub) = safe baseline. Experiments go on their own branch.
+- `archive-homepage-edits` = current experiment branch (may or may not be merged). An old `experiment/redesign` branch still exists on GitHub with nothing unique; Dana may delete it.
+
+### 2026-10-26/27 — setup and homepage work
+On `openfoto` (pushed):
+- Dev `/api` proxy to the old backend (CORS workaround), guarded so it's off when `DEV_API_PROXY_TARGET` isn't set (keeps Enzo's setup working).
+- Personal Google Maps dev key via `.env`; map loads but has no pins (old backend has no geo search).
+- Merged Enzo's a2d098c: `siteConfig.js` is local-only, template is `siteConfig.js.example`.
+- This guide (CLAUDE.md).
+
+On `archive-homepage-edits` (5 commits, NOT pushed yet as of 2026-10-27):
+1. Header: the five language buttons are one dropdown (reuses header-nav popup pattern, `data-popup="language"`); current-language check mark now covers all 5 locales.
+2. Homepage (`src/layouts/landing/`): thumbnail row under a full-width timeline, ported from master's `home` layout. Timeline moved from below the search into a new `home__photos` section under the hero. Added `getData()` to `photo-manager.js` and master's `forceSmallSize` to `thumbnail-controller.js`. Clicking a thumbnail opens `/photos/?id=`.
+3. Loading states, modelled on fortepan.hu: row collapsed (`max-height: 0`) until the timeline data arrives → timeline appears and `.home__photos` gets `is-loaded` → row slides open with 21 skeleton placeholders (existing thumbnail `is-loading` styles) → real thumbnails replace them. Before/after photo sets load in parallel.
+- Uncommitted: Dana's own `padding-right: 1rem` on `.header-nav__actions` in `header-nav.scss`. Leave it for Dana to commit.
+
+### Open items / ideas
+- Ask Enzo: when `back.openfoto.org` is live (then change `DEV_API_PROXY_TARGET`), and whether `CLAUDE.md` should be in the shared repo.
+- Push `archive-homepage-edits` when Dana is ready; possibly a PR into `openfoto` later.
+- Possible next steps: skeleton timeline bar during loading; fix `torem` in `map.scss` (with Dana's OK).
+- Firefox showed two "NetworkError when attempting to fetch resource" console errors on the homepage; not yet identified (likely the sign-in status check). Expand the error to see the URL.
+
+### How Dana likes to work
+- Explain in plain language, with the files involved; give a Cursor or GitHub Desktop tip when it helps.
+- Test in the browser preview before calling anything done. Dana often has their own `npm run dev` running on 8080; check before starting another server, and use a separate browser tab to avoid clashing with Dana's clicks.
+- Commit on the current branch when asked; never commit `.env` or `siteConfig.js`; confirm before pushing or deleting anything on GitHub.
