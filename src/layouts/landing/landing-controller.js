@@ -1,5 +1,6 @@
 import { Controller } from "stimulus"
 
+import throttle from "lodash/throttle"
 import searchAPI from "../../api/search"
 import { getLocale, numberWithCommas, setPageMeta, photoRes, getOrg } from "../../js/utils"
 import photoManager from "../../js/photo-manager"
@@ -19,12 +20,15 @@ export default class extends Controller {
       "announcementcaption",
       "announcementcontent",
       "buttons",
+      "thumbnails",
     ]
   }
 
   connect() {
     this.getTotalItemsNumber()
     this.renderContent()
+
+    this.resizeThumbnails = throttle(this.resizeThumbnails, 500)
   }
 
   renderContent() {
@@ -83,10 +87,60 @@ export default class extends Controller {
     // request loading photos through the photoManager module
     // to get the functionalities the timeline requires
     await photoManager.loadPhotoData(params)
+
+    // load the previous and next photos too - the # of photos is defined in params.size
+    await photoManager.loadMorePhotoDataInContext()
+    await photoManager.loadMorePhotoDataInContext(true) // passing true loads a set before the first
+
     // select the photo by the id to get the right date displayed on the timeline
     photoManager.selectPhotoById(id, false)
 
+    this.renderThumbnails()
+
     this.element.querySelector(".photos-timeline").classList.add("is-visible")
+  }
+
+  // thumbnail row under the timeline (ported from fortepan.hu master)
+  renderThumbnails() {
+    const template = document.getElementById("photos-thumbnail")
+
+    photoManager.getData().result.items.forEach(item => {
+      const thumbnail = template.content.firstElementChild.cloneNode(true)
+      thumbnail.photoId = item.mid
+      thumbnail.photo = item.photo
+      thumbnail.year = item.year
+      // the row scrolls horizontally, so don't wait for thumbnails to enter the viewport
+      thumbnail.forceImageLoad = true
+      thumbnail.forceSmallSize = true
+      this.thumbnailsTarget.appendChild(thumbnail)
+    })
+
+    const selected = this.thumbnailsTarget.children[photoManager.getSelectedPhotoIndex()]
+    if (selected) selected.classList.add("is-selected")
+
+    this.centerSelectedThumbnail()
+  }
+
+  resizeThumbnails() {
+    this.thumbnailsTarget.querySelectorAll(".photos-thumbnail").forEach(thumbnail => {
+      if (thumbnail.photosThumbnail) thumbnail.photosThumbnail.resize()
+    })
+
+    this.centerSelectedThumbnail()
+  }
+
+  centerSelectedThumbnail() {
+    const thumb = this.thumbnailsTarget.querySelector(".photos-thumbnail.is-selected")
+    if (!thumb) return
+
+    this.element.querySelector(".home__thumbnails-wrapper").scrollLeft =
+      thumb.offsetLeft - (window.innerWidth - thumb.offsetWidth) / 2
+  }
+
+  onThumbnailClicked(e) {
+    if (e && e.detail && e.detail.data && e.detail.data.mid) {
+      window.location = `/${getLocale()}/photos/?id=${e.detail.data.mid}`
+    }
   }
 
   /**

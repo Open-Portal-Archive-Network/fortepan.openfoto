@@ -7,7 +7,11 @@ layout: base/base.liquid
 <div
   class="home scrollview"
   data-controller="landing"
-  data-action="timeline:yearSelected@document->landing#onYearSelected timeline:stopDrag@document->landing#onYearSelected">
+  data-action="timeline:yearSelected@document->landing#onYearSelected
+               timeline:stopDrag@document->landing#onYearSelected
+               resize@window->landing#resizeThumbnails
+               thumbnail:loaded@document->landing#centerSelectedThumbnail
+               photosThumbnail:select@document->landing#onThumbnailClicked">
   <section class="home__hero">
     <div class="home__announcement">
       <div class="home__announcement__caption caption" data-landing-target="announcementcaption">{{ Loading }}</div>
@@ -22,6 +26,11 @@ layout: base/base.liquid
       class="home__hero__background"
       data-landing-target="heroBg"
       data-bg-id="{{ announcement.cover_image }}"></div>
+  </section>
+
+  <section class="home__photos">
+    {% include timeline/timeline.liquid %}
+    <div class="home__thumbnails-wrapper"><div class="home__thumbnails" data-landing-target="thumbnails"></div></div>
   </section>
 
   <section class="home__content">
@@ -51,8 +60,6 @@ layout: base/base.liquid
       </div>
     </div>
 
-    {% include timeline/timeline.liquid %}
-
     <div class="home__intro">
       <h3 class="home__intro__headline" data-landing-target="description"></h3>
       <div class="home__intro__text" data-landing-target="content"></div>
@@ -61,3 +68,6 @@ layout: base/base.liquid
 
   {% include footer/footer.liquid %}
 </div>
+
+{% include thumbnail/thumbnail-template.liquid %}
+{% include age-restriction/age-restriction-template.liquid %}

@@ -90,6 +90,10 @@ const loadPhotoData = async (params, silent, lockContext) => {
   return result
 }
 
+const getData = () => {
+  return photoData
+}
+
 const hasData = () => {
   return photoData.result && photoData.result.items && photoData.result.items.length
 }
@@ -545,6 +549,7 @@ const clearAllData = () => {
 
 export default {
   loadPhotoData,
+  getData,
   hasData,
   getSelectedPhotoId,
   getSelectedPhotoData,

@@ -107,9 +107,8 @@
 
 .home__search-wrapper {
   margin: 0 auto;
-  margin-top: -2rem;
   max-width: rem(800px);
-  padding: 0 0 4rem;
+  padding: 3rem 0 4rem;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -202,4 +201,31 @@
   max-width: rem(1140px);
   margin: 0 auto;
   border-radius: rem(4px);
+}
+
+// timeline + thumbnail row under the hero (ported from fortepan.hu master)
+.home__photos .photos-timeline {
+  max-width: none;
+  border-radius: 0;
+}
+
+.home__thumbnails-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.home__thumbnails {
+  display: flex;
+
+  @media screen and (min-width: $breakpoint-phone) {
+    padding-top: 0.5rem;
+  }
+
+  .photos-thumbnail {
+    min-width: rem(128px);
+  }
+
+  .photos-thumbnail__image {
+    height: rem(107px);
+  }
 }
