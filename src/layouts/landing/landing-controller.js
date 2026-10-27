@@ -29,6 +29,7 @@ export default class extends Controller {
     this.renderContent()
 
     this.resizeThumbnails = throttle(this.resizeThumbnails, 500)
+    this.centerSelectedThumbnail()
   }
 
   renderContent() {
@@ -103,6 +104,9 @@ export default class extends Controller {
   // thumbnail row under the timeline (ported from fortepan.hu master)
   renderThumbnails() {
     const template = document.getElementById("photos-thumbnail")
+
+    // remove the skeleton placeholders
+    this.thumbnailsTarget.innerHTML = ""
 
     photoManager.getData().result.items.forEach(item => {
       const thumbnail = template.content.firstElementChild.cloneNode(true)
