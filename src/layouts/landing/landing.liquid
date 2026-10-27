@@ -30,7 +30,18 @@ layout: base/base.liquid
 
   <section class="home__photos">
     {% include timeline/timeline.liquid %}
-    <div class="home__thumbnails-wrapper"><div class="home__thumbnails" data-landing-target="thumbnails"></div></div>
+    <div class="home__thumbnails-wrapper">
+      <div class="home__thumbnails" data-landing-target="thumbnails">
+        {% comment %}skeleton placeholders until the photos load (10 before, the cover photo, 10 after){% endcomment %}
+        {% for i in (1..21) %}
+        <div class="photos-thumbnail is-visible is-loading{% if i == 11 %} is-selected{% endif %}">
+          <div class="photos-thumbnail__image"></div>
+          <div class="photos-thumbnail__meta photos-thumbnail__meta--location"></div>
+          <div class="photos-thumbnail__meta photos-thumbnail__meta--description"></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </section>
 
   <section class="home__content">
