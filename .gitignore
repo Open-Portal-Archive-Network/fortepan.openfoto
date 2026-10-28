@@ -23,3 +23,6 @@ src/static/autocomplete-hu.json
 .DS_Store
 .claude/
 src/data/siteConfig.js
+
+# Local session summaries (see CLAUDE.md)
+SESSION-NOTES.md
