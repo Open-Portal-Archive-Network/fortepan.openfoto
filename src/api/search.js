@@ -269,8 +269,8 @@ const search = params => {
 
     // if there's a year range defined (advanced search / range filter)
     if (params.year_from || params.year_to) {
-      if (params.year_from) query.where.push({ "year >=": `${params.from}` })
-      if (params.year_to) query.where.push({ "year <=": `${params.year_to}` })
+      if (params.year_from) query.where.push({ "Media.year >=": `${params.year_from}` })
+      if (params.year_to) query.where.push({ "Media.year <=": `${params.year_to}` })
     }
 
     if (params.gb) {

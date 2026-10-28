@@ -1,0 +1,71 @@
+{% comment %}ported from fortepan.hu master, limited to the filters the current backend supports{% endcomment %}
+<div class="dialog dialog-advanced-search"
+     data-controller="dialog--advanced-search"
+     data-action="dialogs:hide@document->dialog--advanced-search#hide
+                   dialogAdvancedSearch:show@document->dialog--advanced-search#show
+                   dialogAdvancedSearch:hide@document->dialog--advanced-search#hide"
+>
+  <div class="dialog__wrapper">
+      <div class="button-circular dialog__close"
+           data-action="click->dialog--advanced-search#hide"
+      >
+        {% inlineSVG src:"src/static/images/icons/24/icon-close.svg" class:"button-circular__icon" %}
+        <div class="button-circular__label">{{ lang[locale].close }}</div>
+      </div>
+      <h3 class="dialog__title">{{ lang[locale].advanced_search }}</h3>
+      <form class="dialog-advanced-search__form" data-dialog--advanced-search-target="form">
+
+        <div class="dialog__form-row">
+          <div class="form-row-group">
+            {% include input/input.liquid type:'text' name:'country' label:lang[locale].country autosuggest:'country' class:'dialog-advanced-search__input' %}
+          </div>
+          <div class="form-row-group">
+            {% include input/input.liquid type:'text' name:'city' label:lang[locale].location autosuggest:'city' class:'dialog-advanced-search__input' %}
+          </div>
+        </div>
+
+        <div class="dialog__form-row">
+          <div class="form-row-group">
+            {% include input/input.liquid type:'text' name:'donor' label:lang[locale].donor autosuggest:'donor' class:'dialog-advanced-search__input' %}
+          </div>
+          <div class="form-row-group">
+            {% include input/input.liquid type:'text' name:'photographer' label:lang[locale].photographer autosuggest:'photographer' class:'dialog-advanced-search__input' %}
+          </div>
+        </div>
+
+        <div class="dialog__form-row">
+          <div class="form-row-group">
+            {% include input/input.liquid type:'text' name:'tag' label:lang[locale].tag autosuggest:'tag' class:'dialog-advanced-search__input' %}
+          </div>
+          <div class="form-row-group">
+            {% include input/input.liquid type:'text' name:'id' label:lang[locale].picture_id class:'dialog-advanced-search__input' input_options:'inputmode="numeric" pattern="[0-9]*"' %}
+          </div>
+        </div>
+
+        {% comment %}same range as the timeline{% endcomment %}
+        {% capture options %}
+            <option value="">--</option>{% for i in (1840..2010) %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+        {% endcapture %}
+
+        <div class="dialog__form-row">
+          <div class="form-row-group">
+            {% include select/select.liquid name:'year' label:lang[locale].year class:'dialog-advanced-search__input' options:options %}
+          </div>
+
+          <div class="form-row-group form-row-group--year">
+            {% include select/select.liquid name:'year_from' label:lang[locale].year_from class:'dialog-advanced-search__input' options:options %}
+            {% include select/select.liquid name:'year_to' label:lang[locale].year_to class:'dialog-advanced-search__input' options:options %}
+          </div>
+        </div>
+
+        {% assign options = false %}
+
+        <div class="dialog-search__actions">
+          <button class="button button--primary dialog__button dialog-advanced-search__button"
+                  data-action="click->dialog--advanced-search#submit"
+          >{{ lang[locale].search }}</button>
+        </div>
+
+      </form>
+  </div>
+</div>

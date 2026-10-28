@@ -141,6 +141,8 @@ module.exports = {
     username_or_email: "Felhasználónév vagy Email",
     weekly_fortepan: "Heti Fortepan",
     year: "Év",
+    year_from: "Évtől",
+    year_to: "Évig",
     age_restriction: {
       title: "Korhatáros tartalom",
       content: "A kép megtekintése a nyugalom megzavarására alkalmas, kiskorúak számára nem ajánlott!",
@@ -303,6 +305,8 @@ module.exports = {
     username_or_email: "Username or Email",
     weekly_fortepan: "Weekly Fortepan",
     year: "Year",
+    year_from: "From year",
+    year_to: "To year",
     age_restriction: {
       title: "Age-restricted content",
       content: "This content may be offensive or disturbing, not appropriate for visitors under 18 years.",
@@ -465,6 +469,8 @@ module.exports = {
     username_or_email: "Username o Email",
     weekly_fortepan: "Weekly Fortepan",
     year: "Anno",
+    year_from: "Dall'anno",
+    year_to: "All'anno",
     age_restriction: {
       title: "Contenuto soggetto a limiti di età",
       content: "Il seguente contenuto potrebbe risultare offensivo e urtare la sensibilità di alcuni utenti, visione non adatto ai minori di 18 anni.",
@@ -625,6 +631,8 @@ module.exports = {
     username_or_email: "Nazwa użytkownika lub adres e-mail",
     weekly_fortepan: "Tygodnik Fortepan",
     year: "Rok",
+    year_from: "Od roku",
+    year_to: "Do roku",
     age_restriction: {
       title: "Treści z ograniczeniami wiekowymi",
       content: "Ta treść może być obraźliwa lub niepokojąca i nieodpowiednia dla osób poniżej 18 roku życia.",
@@ -787,6 +795,8 @@ module.exports = {
     username_or_email: "Nom d'utilisateur ou e-mail",
     weekly_fortepan: "Fortepan hebdomadaire",
     year: "Année",
+    year_from: "De l'année",
+    year_to: "À l'année",
     age_restriction: {
       title: "Contenu réservé aux adultes",
       content: "Ce contenu peut être offensant ou perturbant, ne convenant pas aux visiteurs de moins de 18 ans.",
