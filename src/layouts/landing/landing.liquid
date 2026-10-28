@@ -13,19 +13,22 @@ layout: base/base.liquid
                thumbnail:loaded@document->landing#centerSelectedThumbnail
                photosThumbnail:select@document->landing#onThumbnailClicked">
   <section class="home__hero">
-    <div class="home__announcement">
-      <div class="home__announcement__caption caption" data-landing-target="announcementcaption">{{ Loading }}</div>
-      <h1 class="home__announcement__title">
-        <strong data-landing-target="announcementtitle"></strong>
-      </h1>
-      <div class="home__announcement__blurb p" data-landing-target="announcementcontent"></div>
-      <div class="home__announcement__actions" data-landing-target="buttons"></div>
-
+    {% assign featured = featuredTags.tags[0] %}
+    {% assign featured_text = featured[locale] | default: featured.en %}
+    <div class="home__announcement" data-landing-target="tagItem" data-tag="{{ featured.tag }}">
+      <div class="home__announcement__caption caption">{{ lang[locale].tags.featured_caption }}<span data-tag-count></span></div>
+      <h1 class="home__announcement__title"><strong>{{ featured_text.title }}</strong></h1>
+      <div class="home__announcement__blurb p">{{ featured_text.blurb }}</div>
+      <div class="home__announcement__actions">
+        <a href="/{{ locale }}/photos/?tag={{ featured.tag | url_encode }}" class="button button--medium button--primary">
+          <span>{{ lang[locale].tags.see_all }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2,6 L6,10 L10,6 M6,-2 L6,9" transform="rotate(-90 7 4)"/>
+          </svg>
+        </a>
+      </div>
     </div>
-    <div
-      class="home__hero__background"
-      data-landing-target="heroBg"
-      data-bg-id="{{ announcement.cover_image }}"></div>
+    <div class="home__hero__background" data-landing-target="heroBg"></div>
   </section>
 
   <section class="home__photos">
@@ -74,6 +77,38 @@ layout: base/base.liquid
     <div class="home__intro">
       <h3 class="home__intro__headline" data-landing-target="description"></h3>
       <div class="home__intro__text" data-landing-target="content"></div>
+    </div>
+
+    <div class="home__usp home__usp--collections">
+      <div class="home__usp__header">
+        <h2>{{ lang[locale].tags.explore_title }}</h2>
+        <p class="text-medium">{{ lang[locale].tags.explore_caption }}</p>
+      </div>
+
+      <ul class="home__usp__list">
+        {% for item in featuredTags.tags offset: 1 %}
+        {% assign item_text = item[locale] | default: item.en %}
+        {% capture tag_url %}/{{ locale }}/photos/?tag={{ item.tag | url_encode }}{% endcapture %}
+        <li class="list-item" data-landing-target="tagItem" data-tag="{{ item.tag }}">
+          <a class="list-item__cover" href="{{ tag_url }}">
+            <img class="list-item__photo" alt="{{ item_text.title }}" data-tag-photo>
+          </a>
+          <div class="list-item__meta">
+            <p class="text-small text-secondary"><span data-tag-count>&nbsp;</span></p>
+            <h5><a href="{{ tag_url }}" class="list-item__title">{{ item_text.title }}</a></h5>
+            <p class="text-medium text-secondary">{{ item_text.blurb }}</p>
+            <div class="list-item__actions">
+              <a href="{{ tag_url }}" class="button button--secondary button--inline">
+                <span>{{ lang[locale].tags.see_all }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2,6 L6,10 L10,6 M6,-2 L6,9" transform="rotate(-90 7 4)"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
     </div>
   </section>
 

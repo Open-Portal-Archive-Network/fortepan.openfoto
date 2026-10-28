@@ -236,3 +236,166 @@
     height: rem(107px);
   }
 }
+
+// "explore by tag" section, styles copied from the "previous uploads" section on fortepan.hu master
+.home__usp {
+  position: relative;
+  max-width: rem(1140px);
+  margin: 0 auto;
+  padding: 4.5rem 0;
+  border-top: 1px solid;
+
+  @media screen and (max-width: ($breakpoint-phone - 1px)) {
+    padding: 3rem 0;
+  }
+
+  .theme--light & {
+    border-top-color: rgba($dark-base, 0.12);
+  }
+
+  .theme--dark & {
+    border-top-color: rgba($light-base, 0.12);
+  }
+}
+
+.home__usp__header {
+  margin-bottom: rem(48px);
+
+  @media screen and (min-width: $breakpoint-tablet) {
+    margin-right: 33%;
+  }
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p {
+    max-width: 50rem;
+
+    .theme--light & {
+      color: rgba($dark-base, 0.64);
+    }
+
+    .theme--dark & {
+      color: rgba($light-base, 0.64);
+    }
+  }
+
+  h2 + p {
+    margin-top: rem(4px);
+  }
+}
+
+.home__usp__list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 3rem 1rem;
+
+  @media screen and (max-width: ($breakpoint-desktop - 1px)) {
+    flex-wrap: wrap;
+  }
+
+  @media screen and (max-width: ($breakpoint-phone - 1px)) {
+    flex-wrap: nowrap;
+    flex-direction: column;
+  }
+
+  .list-item {
+    flex-basis: calc((100% - 3 * 1rem) / 4);
+
+    @media screen and (max-width: ($breakpoint-desktop - 1px)) {
+      flex-basis: calc((100% - 2 * 1rem) / 3);
+    }
+
+    @media screen and (max-width: ($breakpoint-tablet - 1px)) {
+      flex-basis: calc((100% - 1rem) / 2);
+    }
+
+    @media screen and (max-width: ($breakpoint-phone - 1px)) {
+      flex-basis: auto;
+    }
+
+    &__cover {
+      display: block;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: rem(4px);
+      overflow: hidden;
+
+      .theme--light & {
+        background-color: rgba($dark-base, 0.06);
+      }
+
+      .theme--dark & {
+        background-color: rgba($light-base, 0.06);
+      }
+
+      &:hover + .list-item__meta h5 a {
+        color: $red;
+        border-color: $red;
+      }
+    }
+
+    &__photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.8s $ease-out-expo, filter 0.2s $ease-out-expo;
+
+      &.is-loaded {
+        opacity: 1;
+      }
+    }
+
+    &__meta {
+      margin-top: rem(12px);
+
+      p {
+        margin: 0;
+
+        &:first-of-type {
+          color: $grey;
+        }
+      }
+
+      h5 {
+        margin: 0;
+
+        a {
+          color: inherit;
+          text-decoration: none;
+          border-bottom: 1px solid transparent;
+          transition: color 0.2s $ease-out-expo, border-color 0.2s $ease-out-expo;
+        }
+
+        &:hover a {
+          color: $red;
+          border-color: $red;
+        }
+      }
+
+      h5 + p,
+      h5 + p + p {
+        margin-top: rem(8px);
+      }
+    }
+
+    &:hover .list-item__photo {
+      filter: brightness(0.7);
+    }
+
+    &__actions {
+      margin-top: 1rem;
+
+      .button {
+        margin: 0.5rem 0.25rem 0 0;
+      }
+    }
+  }
+}

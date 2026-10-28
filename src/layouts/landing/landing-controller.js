@@ -2,7 +2,7 @@ import { Controller } from "stimulus"
 
 import throttle from "lodash/throttle"
 import searchAPI from "../../api/search"
-import { getLocale, numberWithCommas, setPageMeta, photoRes, getOrg } from "../../js/utils"
+import { getLocale, numberWithCommas, setPageMeta, photoRes, getOrg, lang } from "../../js/utils"
 import photoManager from "../../js/photo-manager"
 
 export default class extends Controller {
@@ -16,17 +16,15 @@ export default class extends Controller {
       "title",
       "content",
       "description",
-      "announcementtitle",
-      "announcementcaption",
-      "announcementcontent",
-      "buttons",
       "thumbnails",
+      "tagItem",
     ]
   }
 
   connect() {
     this.getTotalItemsNumber()
     this.renderContent()
+    this.loadTags()
 
     this.resizeThumbnails = throttle(this.resizeThumbnails, 500)
     this.centerSelectedThumbnail()
@@ -35,27 +33,31 @@ export default class extends Controller {
   renderContent() {
     searchAPI.getLanding().then(data => {
       setPageMeta(data.title, data.content, null)
-      this.loadBackgroundImage(data.media)
       this.contentTarget.innerText = data.description_long_on_right
       this.descriptionTarget.innerText = data.description_short_on_left
-      this.announcementtitleTarget.innerText = data.announcement_title
-      this.announcementcaptionTarget.innerText = data.announcement_caption
-      this.announcementcontentTarget.innerText = data.announcement_content
-      this.renderButtons(data.buttons)
     })
   }
 
-  renderButtons(buttons) {
-    buttons.forEach(item => {
-      const button = document.createElement("a")
-      button.textContent = item.text
-      button.innerHTML += '&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10"> <path   fill="none"   stroke="currentColor"   stroke-linecap="round"   stroke-linejoin="round"   stroke-width="2"   d="M2,6 L6,10 L10,6 M6,-2 L6,9"   transform="rotate(-90 7 4)" /></svg>'
-      button.classList.add("button")
-      button.href = item.link
-      button.classList.add("button--medium")
-      button.classList.add("button--primary")
-      this.buttonsTarget.appendChild(button)
-    });
+  // the hero and the "explore by tag" cards come from src/data/featuredTags.json,
+  // the cover photo and photo count of each tag from the backend
+  loadTags() {
+    this.tagItemTargets.forEach((item, index) => {
+      searchAPI.search({ tag: item.dataset.tag, size: 1 }).then(data => {
+        const photo = data.items[0]
+        if (!photo) return
+
+        const count = `${numberWithCommas(data.total)} ${lang("tags").photos}`
+        item.querySelector("[data-tag-count]").textContent = index === 0 ? ` · ${count}` : count
+
+        if (index === 0) {
+          this.loadBackgroundImage(photo)
+        } else {
+          const img = item.querySelector("[data-tag-photo]")
+          img.addEventListener("load", () => img.classList.add("is-loaded"))
+          img.src = photoRes(480, photo.photo)
+        }
+      })
+    })
   }
 
   /**
