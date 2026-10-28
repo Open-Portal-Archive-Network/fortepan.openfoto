@@ -91,3 +91,4 @@ Use Enzo's map feature (commit `5eece40`) as the reference: `src/components/mapv
 - Work on a branch per change; `openfoto` is the working branch, `master` is upstream.
 - Before calling something done: check it in the browser preview (`localhost:8080`), including the console for errors.
 - Explain what changed and why in plain terms; mention the files so Dana can open them in Cursor and review the diff in GitHub Desktop.
+- Session summaries live in `SESSION-NOTES.md` (repo root, git-ignored, survives branch switches). Read it at the start of a session; when Dana asks for a summary, append a new dated section at the bottom. Never put summaries in this file.
