@@ -46,4 +46,9 @@ export default class extends Controller {
   setValue(e) {
     this.inputTarget.selectizeControl.value = e.detail.value
   }
+
+  showAdvancedSearchDialog(e) {
+    if (e) e.preventDefault()
+    trigger("dialogAdvancedSearch:show")
+  }
 }
