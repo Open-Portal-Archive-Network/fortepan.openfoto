@@ -1,0 +1,39 @@
+{
+  "tags": [
+    {
+      "tag": "winter",
+      "en": {
+        "title": "Winter",
+        "blurb": "Snowy streets, frozen rivers and sledding hills: winter days captured by our donors across the decades."
+      }
+    },
+    {
+      "tag": "market",
+      "en": {
+        "title": "Markets",
+        "blurb": "Stalls, crowds and everyday trade in market halls and open-air markets."
+      }
+    },
+    {
+      "tag": "school",
+      "en": {
+        "title": "School",
+        "blurb": "Classrooms, schoolyards and class photos from generations of students."
+      }
+    },
+    {
+      "tag": "church",
+      "en": {
+        "title": "Churches",
+        "blurb": "Churches and chapels, inside and out, in cities and villages."
+      }
+    },
+    {
+      "tag": "railway",
+      "en": {
+        "title": "Railway",
+        "blurb": "Stations, steam engines and journeys along the tracks."
+      }
+    }
+  ]
+}
