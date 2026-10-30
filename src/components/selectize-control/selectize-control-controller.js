@@ -33,6 +33,7 @@ export default class extends Controller {
         evt.preventDefault()
         tagNode.parentNode.removeChild(tagNode)
         this.togglePlaceholder()
+        trigger("selectizeControl:tagRemoved", null, this.element, true)
       })
       tagNode.appendChild(close)
 
@@ -64,6 +65,7 @@ export default class extends Controller {
     if (this.inputTarget.value === "" && e.key === "Backspace") {
       if (this.inputTarget.previousElementSibling) {
         this.inputTarget.parentElement.removeChild(this.inputTarget.previousElementSibling)
+        trigger("selectizeControl:tagRemoved", null, this.element, true)
       }
     }
 

@@ -40,6 +40,11 @@ export default class extends Controller {
     }
   }
 
+  // removing a tag updates the results right away on the photos and map pages
+  onTagRemoved() {
+    if (appState("is-map") || window.location.pathname.indexOf("/photos") > -1) this.submit()
+  }
+
   // replaces the tags with the search values of the current url (no values clear the field)
   syncWithURL() {
     this.inputTarget.selectizeControl.value = urlParamsToSearchValues(getURLParams()).join(",")

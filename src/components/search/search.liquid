@@ -2,6 +2,7 @@
   data-controller="search advanced-search-tags"
   data-action="search:syncWithURL@document->search#syncWithURL
                selectizeControl:tagAdded->advanced-search-tags#onTagAdded
+               selectizeControl:tagRemoved->search#onTagRemoved
                click->advanced-search-tags#onTagClick"
 >
     <form class="search__form" data-search-target="form">
