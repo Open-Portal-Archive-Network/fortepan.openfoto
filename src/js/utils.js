@@ -1,6 +1,9 @@
 import langData from "../data/lang"
 import config from "../data/siteConfig"
 
+// url params the advanced search dialog sets; in the search field they show as "key:value" tags
+const ADVANCED_SEARCH_KEYS = ["country", "city", "donor", "photographer", "tag", "id", "year", "year_from", "year_to"]
+
 export const getLocale = () => {
   return document.querySelector("body").dataset.lang
 }
@@ -25,6 +28,46 @@ export const trigger = (eventId, obj = {}, scope = document, doBubble = false) =
     bubbles: doBubble,
   })
   scope.dispatchEvent(event)
+}
+
+// parses an advanced search term (e.g. "city:Budapest") into { key, value }, returns null for any other search value
+export const parseAdvancedSearchTerm = term => {
+  const [key, value] = term.split(":").map(s => s.trim())
+  return value !== undefined && ADVANCED_SEARCH_KEYS.includes(key) ? { key, value } : null
+}
+
+// converts search input values into query params (advanced search terms become their own params, the rest goes to q)
+export const searchValuesToQueryParams = values => {
+  const params = []
+  const queryValues = []
+
+  values.forEach(value => {
+    const term = parseAdvancedSearchTerm(value)
+    if (term) {
+      params.push(`${term.key}=${encodeURIComponent(term.value)}`)
+    } else {
+      queryValues.push(value)
+    }
+  })
+
+  if (params.length > 0) params.push("advancedSearch=1")
+  if (queryValues.length > 0) params.push(`q=${queryValues.join(", ")}`)
+
+  return params
+}
+
+// returns the advanced search term keys of the url params (also set without the advancedSearch flag by sidebar links,
+// e.g. ?donor=...), except "id" which only opens a photo unless it's part of an advanced search
+export const getSearchTermKeys = params =>
+  Object.keys(params).filter(key => ADVANCED_SEARCH_KEYS.includes(key) && (key !== "id" || params.advancedSearch))
+
+// converts url params into search input values (the reverse of searchValuesToQueryParams)
+export const urlParamsToSearchValues = params => {
+  const termKeys = getSearchTermKeys(params)
+
+  return Object.keys(params)
+    .filter(key => (key === "q" && params.q !== "") || termKeys.includes(key))
+    .map(key => (key === "q" ? `${params[key]}` : `${key}:${params[key]}`))
 }
 
 export const click = () => {

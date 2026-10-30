@@ -1,6 +1,6 @@
 import { Controller } from "stimulus"
 import { appState } from "../../../js/app"
-import { trigger, getURLParams, getLocale } from "../../../js/utils"
+import { trigger, getURLParams, getLocale, searchValuesToQueryParams, urlParamsToSearchValues } from "../../../js/utils"
 
 export default class extends Controller {
   static get targets() {
@@ -14,20 +14,21 @@ export default class extends Controller {
   submit(e) {
     if (e) e.preventDefault()
 
-    const q = this.inputTarget.selectizeControl.value.join(", ")
+    const searchParams = searchValuesToQueryParams(this.inputTarget.selectizeControl.value)
+    const q = searchParams.length > 0 ? `?${searchParams.join("&")}` : "?q"
 
     if (appState("is-map")) {
-      const params = getURLParams()
-      delete params.gb
-      params.q = q
-      window.history.pushState(null, null, `/${getLocale()}/map/?${new URLSearchParams(params).toString()}`)
+      // keep the map position, replace the search
+      const mapParams = getURLParams()
+      const mapQuery = ["gc", "gz"].filter(key => mapParams[key]).map(key => `${key}=${mapParams[key]}`)
+      window.history.pushState(null, null, `/${getLocale()}/map/?${mapQuery.concat(searchParams).join("&")}`)
       this.hide()
       trigger("mapview:load")
     } else if (window.location.pathname.indexOf("/photos") === -1 || appState("is-lists")) {
-      window.location = `/${getLocale()}/photos/?q=${q}`
+      window.location = `/${getLocale()}/photos/${q}`
     } else {
       trigger("photos:historyPushState", {
-        url: `?q=${q}`,
+        url: q,
         resetPhotosGrid: true,
       })
 
@@ -40,9 +41,7 @@ export default class extends Controller {
     this.inputTarget.selectizeControl.reset()
     this.inputTarget.selectizeControl.focus()
 
-    if (getURLParams().q && getURLParams().q.indexOf(", ") !== -1) {
-      this.inputTarget.selectizeControl.value = getURLParams().q
-    }
+    this.inputTarget.selectizeControl.value = urlParamsToSearchValues(getURLParams()).join(",")
   }
 
   hide() {
@@ -51,6 +50,7 @@ export default class extends Controller {
 
   showAdvancedSearchDialog(e) {
     e.preventDefault()
+    this.hide()
     trigger("dialogAdvancedSearch:show")
   }
 }
