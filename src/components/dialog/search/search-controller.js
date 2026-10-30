@@ -36,6 +36,15 @@ export default class extends Controller {
     }
   }
 
+  // removing a tag updates the results right away, but keeps the dialog open for more edits
+  onTagRemoved() {
+    if (!appState("is-map") && (window.location.pathname.indexOf("/photos") === -1 || appState("is-lists"))) return
+
+    this.keepOpen = true
+    this.submit()
+    this.keepOpen = false
+  }
+
   show() {
     this.element.classList.add("is-visible")
     this.inputTarget.selectizeControl.reset()
@@ -45,6 +54,7 @@ export default class extends Controller {
   }
 
   hide() {
+    if (this.keepOpen) return
     this.element.classList.remove("is-visible")
   }
 
