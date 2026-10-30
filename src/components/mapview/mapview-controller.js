@@ -66,6 +66,9 @@ export default class extends Controller {
       this.loadTimer = setTimeout(this.boundLoad, 200)
     })
     trigger("loader:hide", { id: "loaderBase" })
+
+    // show the url's search filters in the search field
+    setTimeout(() => trigger("search:syncWithURL"), 20)
   }
 
   async load() {
@@ -260,6 +263,10 @@ export default class extends Controller {
       this.map.setCenter({ lat, lng })
     }
     if (params.gz) this.map.setZoom(Number(params.gz))
+
+    // the search may have changed too, so refresh the field and the markers
+    trigger("search:syncWithURL")
+    this.load()
   }
 
   toggleMapStyles() {
