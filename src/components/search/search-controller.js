@@ -1,6 +1,6 @@
 import { Controller } from "stimulus"
 
-import { trigger, getLocale, getURLParams } from "../../js/utils"
+import { trigger, getLocale, getURLParams, searchValuesToQueryParams, urlParamsToSearchValues } from "../../js/utils"
 import { appState } from "../../js/app"
 
 export default class extends Controller {
@@ -17,13 +17,14 @@ export default class extends Controller {
     if (e) e.preventDefault()
 
     this.inputTarget.selectizeControl.addTagNode(this.inputTarget.selectizeControl.inputTarget.value)
-    const q = `?q=${this.inputTarget.selectizeControl.value.join(", ")}`
+    const searchParams = searchValuesToQueryParams(this.inputTarget.selectizeControl.value)
+    const q = searchParams.length > 0 ? `?${searchParams.join("&")}` : "?q"
 
     if (appState("is-map")) {
-      const params = getURLParams()
-      delete params.gb
-      params.q = this.inputTarget.selectizeControl.value.join(", ")
-      window.history.pushState(null, null, `/${getLocale()}/map/?${new URLSearchParams(params).toString()}`)
+      // keep the map position, replace the search
+      const mapParams = getURLParams()
+      const mapQuery = ["gc", "gz"].filter(key => mapParams[key]).map(key => `${key}=${mapParams[key]}`)
+      window.history.pushState(null, null, `/${getLocale()}/map/?${mapQuery.concat(searchParams).join("&")}`)
       this.inputTarget.selectizeControl.blur()
       trigger("mapview:load")
     } else if (window.location.pathname.indexOf("/photos") === -1) {
@@ -39,12 +40,9 @@ export default class extends Controller {
     }
   }
 
-  clear() {
-    this.inputTarget.selectizeControl.value = ""
-  }
-
-  setValue(e) {
-    this.inputTarget.selectizeControl.value = e.detail.value
+  // replaces the tags with the search values of the current url (no values clear the field)
+  syncWithURL() {
+    this.inputTarget.selectizeControl.value = urlParamsToSearchValues(getURLParams()).join(",")
   }
 
   showAdvancedSearchDialog(e) {

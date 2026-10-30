@@ -1,6 +1,6 @@
 import { Controller } from "stimulus"
 
-import { trigger, getURLParams, getLocale } from "../../../js/utils"
+import { trigger, getURLParams, getLocale, getSearchTermKeys } from "../../../js/utils"
 import { appState } from "../../../js/app"
 
 const FIELDS_SELECTOR = ".dialog-advanced-search__input input, .dialog-advanced-search__input select"
@@ -57,11 +57,12 @@ export default class extends Controller {
   show() {
     this.element.classList.add("is-visible")
 
-    // refill the form from the current advanced search, or start empty
+    // refill the form from the current search terms (advanced search or sidebar links like ?donor=...), or start empty
     const params = getURLParams()
+    const keys = getSearchTermKeys(params)
 
     this.formTarget.querySelectorAll(FIELDS_SELECTOR).forEach(input => {
-      input.value = params.advancedSearch && params[input.name] ? params[input.name] : ""
+      input.value = keys.includes(input.name) ? params[input.name] : ""
     })
   }
 

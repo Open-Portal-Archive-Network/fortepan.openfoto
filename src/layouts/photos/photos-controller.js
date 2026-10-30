@@ -205,16 +205,9 @@ export default class extends Controller {
       delete params.id
     } else {
       params.from = 0
-    }
 
-    if (!params.q) {
-      // clear all search fields if query is not defined in the request
-      trigger("search:clear")
-    } else {
-      // set all search fields' value if query param is set
-      setTimeout(() => {
-        trigger("search:setValue", { value: params.q })
-      }, 20)
+      // set up the search field on the first load of a search (not on infinite scroll loads)
+      setTimeout(() => trigger("search:syncWithURL"), 20)
     }
 
     // show loading indicator
