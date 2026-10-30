@@ -4,7 +4,7 @@
      headerNav:refreshProfile@document->header-nav#checkIfUserIsSignedIn"
 >
   <div class="header-nav__logo">
-    <a href="/{{ locale }}/" class="header-nav__logo__link">
+    <a href="{% if locale == "en" %}/{% else %}/{{ locale }}/{% endif %}" class="header-nav__logo__link">
       {% inlineSVG src:"src/static/images/header-logo.svg" class:"header-nav__logo" %}
       <span data-header-nav-target="logoLabel">Fortepan<br>Method</span>
     </a>
