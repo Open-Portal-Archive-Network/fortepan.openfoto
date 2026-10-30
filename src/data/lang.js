@@ -155,7 +155,7 @@ module.exports = {
       menu_label: "Térkép",
       no_results: "Nincs találat ezen a területen",
     },
-    tags: {
+    featured_tags: {
       featured_caption: "Kiemelt címke",
       explore_title: "Fedezze fel címkék szerint",
       explore_caption: "Témák, amelyek végigkísérik a gyűjteményt.",
@@ -319,7 +319,7 @@ module.exports = {
       menu_label: "Map",
       no_results: "No results found in this area",
     },
-    tags: {
+    featured_tags: {
       featured_caption: "Featured tag",
       explore_title: "Explore by tag",
       explore_caption: "Themes that run through the whole collection.",
@@ -483,7 +483,7 @@ module.exports = {
       menu_label: "Mappa",
       no_results: "Nessun risultato trovato in quest'area",
     },
-    tags: {
+    featured_tags: {
       featured_caption: "Tag in evidenza",
       explore_title: "Esplora per tag",
       explore_caption: "Temi che attraversano tutta la collezione.",
@@ -645,7 +645,7 @@ module.exports = {
       menu_label: "Mapa",
       no_results: "Nie znaleziono wyników w tym obszarze",
     },
-    tags: {
+    featured_tags: {
       featured_caption: "Wyróżniony tag",
       explore_title: "Przeglądaj według tagów",
       explore_caption: "Tematy, które przewijają się przez całą kolekcję.",
@@ -809,7 +809,7 @@ module.exports = {
       menu_label: "Carte",
       no_results: "Aucun résultat dans cette zone",
     },
-    tags: {
+    featured_tags: {
       featured_caption: "Tag à la une",
       explore_title: "Explorer par tag",
       explore_caption: "Des thèmes qui traversent toute la collection.",
