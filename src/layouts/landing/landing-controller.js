@@ -46,7 +46,7 @@ export default class extends Controller {
         const photo = data.items[0]
         if (!photo) return
 
-        const count = `${numberWithCommas(data.total)} ${lang("tags").photos}`
+        const count = `${numberWithCommas(data.total)} ${lang("featured_tags").photos}`
         item.querySelector("[data-tag-count]").textContent = index === 0 ? ` · ${count}` : count
 
         if (index === 0) {
