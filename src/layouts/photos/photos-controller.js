@@ -92,14 +92,16 @@ export default class extends Controller {
       if (
         photoManager.getFirstPhotoDataInContext() &&
         this.element.scrollTop <= thumbnails[0].offsetTop + viewportOffsetTop &&
-        thumbnails[0].classList.contains("is-loaded", "is-visible")
+        thumbnails[0].classList.contains("is-loaded") &&
+        thumbnails[0].classList.contains("is-visible")
       ) {
         // if we scrolled to the top
         year = thumbnails[0].year
       } else if (
         photoManager.getLastPhotoDataInContext() &&
         this.element.scrollTop + this.element.offsetHeight >= this.element.scrollHeight - 100 &&
-        thumbnails[thumbnails.length - 1].classList.contains("is-loaded", "is-visible")
+        thumbnails[thumbnails.length - 1].classList.contains("is-loaded") &&
+        thumbnails[thumbnails.length - 1].classList.contains("is-visible")
       ) {
         // if we scrolled to the bottom
         year = thumbnails[thumbnails.length - 1].year
@@ -199,8 +201,6 @@ export default class extends Controller {
       delete params.id
     } else {
       params.offset = 0
-    }
-
 
       // set up the search field on the first load of a search (not on infinite scroll loads)
       setTimeout(() => trigger("search:syncWithURL"), 20)
@@ -382,3 +382,4 @@ export default class extends Controller {
       })
     }
   }
+}
