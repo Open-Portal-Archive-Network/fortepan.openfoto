@@ -3,7 +3,7 @@ import config from "../data/siteConfig"
 import { appState } from "../js/app"
 
 // simplify and localize the Elastic server response
-const transformResults = resp => {
+const transformResults = (resp, offset = 0) => {
   const l = getLocale()
   const r = {
     total: resp.hits.total.value,
@@ -25,7 +25,7 @@ const transformResults = resp => {
   }
 
   if (resp.hits.hits.length > 0) {
-    resp.hits.hits.forEach(hit => {
+    resp.hits.hits.forEach((hit, index) => {
       // eslint-disable-next-line no-underscore-dangle
       const h = hit.source
       const item = {}
@@ -37,7 +37,7 @@ const transformResults = resp => {
       item.uuid = h.uuid
       item.created = h.created
       item.description = h.description
-      item.search_after = hit.sort
+      item.order = hit.order !== undefined ? Number(hit.order) : offset + index
       item.donor = h.adomanyozo_name
       item.author = hit.author
       item.tags = h.tags
@@ -169,12 +169,10 @@ const search = params => {
       multi: []
     }
     
-    let sortOrder = "asc"
-    if (params && params.reverseOrder) {
-      sortOrder = "desc"
-    }
-
-    const sort = { field: "Media.year", order: `${sortOrder}` }
+    const sort = [
+      { field: "Media.year", order: "asc" },
+      { field: "Media.id", order: "asc" },
+    ]
 
     // returns all records when query field is empty
     if (!params || (params && params.q === "")) {
@@ -287,24 +285,13 @@ const search = params => {
 
     const body = {
       size: params.size || 30,
+      offset: Number(params.offset) || 0,
       sort,
       track_total_hits: true,
       query,
     }
 
-    if (params && params.reverseOrder && params.search_after) {
-      console.log("search before:", params.search_after)
-      query.where.push({ "Media.year <=": `${params.search_after[0]}` })
-      query.where.push({ "Media.id <": `${params.search_after[2]}` })
-    } else if (params.search_after) {
-      console.log("search after:", params.search_after)
-      query.where.push({ "Media.year >=": `${params.search_after[0]}` })
-      query.where.push({ "Media.id >": `${params.search_after[2]}` })
-    } else {
-      body.from = params.from || 0
-    }
-
-    if (params.from === 0 && !params.disableAggregatedYears) {
+    if (body.offset === 0 && !params.disableAggregatedYears) {
       body.aggs = {
         years: {
           terms: {
@@ -318,7 +305,7 @@ const search = params => {
 
     elasticRequest(body)
       .then(resp => {
-        resolve(transformResults(resp))
+        resolve(transformResults(resp, body.offset))
       })
       .catch(err => {
         reject(err)
