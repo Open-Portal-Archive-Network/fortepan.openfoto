@@ -18,11 +18,22 @@ jobs:
         run: |
           set -euo pipefail
           case "$GITHUB_REF_NAME" in
-            deployment) ENVIRONMENT=staging; CONFIG="$STAGING_CONFIG" ;;
-            deployment-prod) ENVIRONMENT=production; CONFIG="$PRODUCTION_CONFIG" ;;
-            *) exit 1 ;;
+            deployment) ENVIRONMENT=staging; CONFIG="$STAGING_CONFIG"; CONFIG_SECRET=STAGING_FRONTEND_CONFIG ;;
+            deployment-prod) ENVIRONMENT=production; CONFIG="$PRODUCTION_CONFIG"; CONFIG_SECRET=PRODUCTION_FRONTEND_CONFIG ;;
+            *) printf 'Unsupported branch: %s\n' "$GITHUB_REF_NAME" >&2; exit 1 ;;
           esac
-          test -n "$CONFIG"
+          missing=0
+          if [ -z "$CONFIG" ]; then
+            printf 'Missing Gitea Actions secret: %s\n' "$CONFIG_SECRET" >&2
+            missing=1
+          fi
+          for name in REGISTRY_USER REGISTRY_PASSWORD KUBE_CONFIG; do
+            if [ -z "${!name:-}" ]; then
+              printf 'Missing Gitea Actions secret: %s\n' "$name" >&2
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then exit 1; fi
           # Configuration is a trusted shell-format env file stored in Gitea.
           set -a
           source /dev/stdin <<< "$CONFIG"
