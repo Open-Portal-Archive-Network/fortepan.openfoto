@@ -1,0 +1,30 @@
+module.exports = {
+  ENV: process.env.ENV,
+  GOOGLE_MAPS_KEY: process.env.GOOGLE_MAPS_KEY,
+  GOOGLE_MAPS_ID: process.env.GOOGLE_MAPS_ID,
+  SITE: process.env.SITE,
+  // In development, API calls go to the local dev server, which proxies them
+  // to DEV_API_PROXY_TARGET (see .eleventy.js) to avoid CORS on localhost
+  BACKEND: process.env.BACKEND,
+  DEV_API_PROXY_TARGET: "https://testapi.example.com",
+  PHOTO_SOURCE: "https://example.cloudfront.net",
+  PHOTO_BUCKET: "example",
+  THUMBNAILS_QUERY_LIMIT: 40,
+  BREAKPOINT_PHONE_XS: 360,
+  BREAKPOINT_PHONE_SM: 480,
+  BREAKPOINT_PHONE: 640,
+  BREAKPOINT_TABLET: 768,
+  BREAKPOINT_DESKTOP: 1024,
+  BREAKPOINT_DESKTOP_LG: 1220,
+  CAROUSEL_SLIDESHOW_DELAY: 4000,
+  DEFAULT_THEME: "light",
+  LOCALES: process.env.LOCALES
+  // [
+  //   { code: "en", text: "English" },
+  //   { code: "hu", text: "Magyar" },
+  //   { code: "it", text: "Italian" },
+  //   { code: "pl", text: "Polska" },
+  //   { code: "fr", text: "Français" },
+  // ],
+  AGE_RESTRICTION_TAG: "18+",
+}

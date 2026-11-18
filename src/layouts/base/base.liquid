@@ -10,11 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="fragment" content="!">
 
-    {% if siteConfig.ENV == 'production' %}
-      {% assign site_url = siteConfig.SITE %}
-    {% else %}
-      {% assign site_url = siteConfig.SITE_DEV %}
-    {% endif %}
+    {% assign site_url = siteConfig.SITE %}
 
     <link rel="shortcut icon" href="{{ site_url }}/favicon.ico" />
     <link rel="apple-touch-icon" href="{{ site_url }}/images/icons/apple-touch-icon.png" />
