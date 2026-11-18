@@ -1,4 +1,5 @@
 const webpack = require("webpack")
+require("dotenv").config()
 const path = require("path")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const Sass = require("sass")
@@ -65,6 +66,11 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       "process.env.ENV": JSON.stringify(process.env.ENV || "development"),
+      ...Object.fromEntries(
+        ["SITE", "BACKEND", "PHOTO_SOURCE", "PHOTO_BUCKET", "GOOGLE_MAPS_KEY", "GOOGLE_MAPS_ID", "LOCALES"].map(
+          name => [`process.env.${name}`, JSON.stringify(process.env[name] || "")]
+        )
+      ),
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
