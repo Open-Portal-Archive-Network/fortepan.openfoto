@@ -1,0 +1,56 @@
+name: Build and deploy site frontend
+on:
+  push:
+    branches: ['site-*']
+jobs:
+  deploy:
+    runs-on: openfoto
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and deploy
+        shell: bash
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          set -euo pipefail
+          BRANCH="$GITHUB_REF_NAME"
+          if [[ ! "$BRANCH" =~ ^site-[a-z0-9]([-a-z0-9.]*[a-z0-9])?$ ]]; then
+            printf 'Invalid site branch name: %s\n' "$BRANCH" >&2
+            exit 1
+          fi
+          for name in REGISTRY_USER REGISTRY_PASSWORD KUBE_CONFIG; do
+            if [ -z "${!name:-}" ]; then
+              printf 'Missing Gitea Actions secret: %s\n' "$name" >&2
+              exit 1
+            fi
+          done
+          CONFIG=$(curl -fsSL " ${{ secrets.VARIABLES_JSON_BASE }}-${BRANCH}.json")
+          for name in SITE BACKEND PHOTO_SOURCE PHOTO_BUCKET LOCALES; do
+            value=$(jq -er --arg name "$name" '.[$name] | select(type == "string" and length > 0)' <<< "$CONFIG") || {
+              printf 'Missing or invalid configuration value: %s\n' "$name" >&2
+              exit 1
+            }
+            printf -v "$name" '%s' "$value"
+          done
+          GOOGLE_MAPS_KEY=$(jq -er '.GOOGLE_MAPS_KEY // "" | select(type == "string")' <<< "$CONFIG")
+          GOOGLE_MAPS_ID=$(jq -er '.GOOGLE_MAPS_ID // "" | select(type == "string")' <<< "$CONFIG")
+          mkdir -p "$HOME/.docker" "$HOME/.kube" /tmp/buildkit
+          AUTH=$(printf '%s:%s' "$REGISTRY_USER" "$REGISTRY_PASSWORD" | base64 -w 0)
+          printf '{"auths":{"gitea.linkensphere.com":{"auth":"%s"}}}' "$AUTH" > "$HOME/.docker/config.json"
+          printf '%s' "$KUBE_CONFIG" | base64 -d > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config" "$HOME/.docker/config.json"
+          curl -fsSL https://github.com/moby/buildkit/releases/download/v0.20.2/buildkit-v0.20.2.linux-amd64.tar.gz | tar -xz -C /tmp/buildkit
+          curl -fsSL https://dl.k8s.io/release/v1.31.4/bin/linux/amd64/kubectl -o /tmp/kubectl
+          chmod +x /tmp/kubectl
+          IMAGE="gitea.linkensphere.com/opan/frontend-${BRANCH}-${GITHUB_SHA}"
+          /tmp/buildkit/bin/buildctl --addr tcp://buildkit.openfoto.svc:1234 build \
+            --frontend dockerfile.v0 --local context=. --local dockerfile=. \
+            --opt "build-arg:NODE_VERSION=$(tr -d '[:space:]' < .nvmrc)" \
+            --opt "build-arg:SITE=$SITE" --opt "build-arg:BACKEND=$BACKEND" \
+            --opt "build-arg:PHOTO_SOURCE=$PHOTO_SOURCE" --opt "build-arg:PHOTO_BUCKET=$PHOTO_BUCKET" \
+            --opt "build-arg:GOOGLE_MAPS_KEY=$GOOGLE_MAPS_KEY" --opt "build-arg:GOOGLE_MAPS_ID=$GOOGLE_MAPS_ID" \
+            --opt "build-arg:LOCALES=$LOCALES" --output "type=image,name=$IMAGE,push=true"
+          /tmp/kubectl -n openfoto set image "deployment/${BRANCH}" "frontend=$IMAGE"
+          /tmp/kubectl -n openfoto rollout status "deployment/${BRANCH}" --timeout=5m
