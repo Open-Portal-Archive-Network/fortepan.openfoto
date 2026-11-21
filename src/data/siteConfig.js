@@ -7,8 +7,8 @@ module.exports = {
   // to DEV_API_PROXY_TARGET (see .eleventy.js) to avoid CORS on localhost
   BACKEND: process.env.BACKEND,
   DEV_API_PROXY_TARGET: process.env.DEV_API_PROXY_TARGET,
-  PHOTO_SOURCE: "https://example.cloudfront.net",
-  PHOTO_BUCKET: "example",
+  PHOTO_SOURCE: process.env.PHOTO_SOURCE,
+  PHOTO_BUCKET: process.env.PHOTO_BUCKET,
   THUMBNAILS_QUERY_LIMIT: 40,
   BREAKPOINT_PHONE_XS: 360,
   BREAKPOINT_PHONE_SM: 480,
