@@ -57,5 +57,5 @@ jobs:
             --opt "build-arg:PHOTO_SOURCE=$PHOTO_SOURCE" --opt "build-arg:PHOTO_BUCKET=$PHOTO_BUCKET" \
             --opt "build-arg:GOOGLE_MAPS_KEY=$GOOGLE_MAPS_KEY" --opt "build-arg:GOOGLE_MAPS_ID=$GOOGLE_MAPS_ID" \
             --opt "build-arg:LOCALES=$LOCALES" --output "type=image,name=$IMAGE,push=true"
-          /tmp/kubectl -n openfoto set image "deployment/${BRANCH}" "frontend=$IMAGE"
+          /tmp/kubectl -n openfoto set image "deployment/${BRANCH}" "${BRANCH}=$IMAGE"
           /tmp/kubectl -n openfoto rollout status "deployment/${BRANCH}" --timeout=5m

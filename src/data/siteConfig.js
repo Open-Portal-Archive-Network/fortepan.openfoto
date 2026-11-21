@@ -6,7 +6,7 @@ module.exports = {
   // In development, API calls go to the local dev server, which proxies them
   // to DEV_API_PROXY_TARGET (see .eleventy.js) to avoid CORS on localhost
   BACKEND: process.env.BACKEND,
-  DEV_API_PROXY_TARGET: "https://testapi.example.com",
+  DEV_API_PROXY_TARGET: process.env.DEV_API_PROXY_TARGET,
   PHOTO_SOURCE: "https://example.cloudfront.net",
   PHOTO_BUCKET: "example",
   THUMBNAILS_QUERY_LIMIT: 40,
