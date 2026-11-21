@@ -18,7 +18,7 @@ module.exports = {
   BREAKPOINT_DESKTOP_LG: 1220,
   CAROUSEL_SLIDESHOW_DELAY: 4000,
   DEFAULT_THEME: "light",
-  LOCALES: process.env.LOCALES
+  LOCALES: process.env.LOCALES ? JSON.parse(process.env.LOCALES) : [],
   // [
   //   { code: "en", text: "English" },
   //   { code: "hu", text: "Magyar" },
