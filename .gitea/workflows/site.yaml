@@ -27,7 +27,7 @@ jobs:
               exit 1
             fi
           done
-          CONFIG=$(curl -fsSL "$VARIABLES_JSON_URL"${BRANCH}.json)
+          CONFIG=$(curl -fsSL "$VARIABLES_JSON_URL"${BRANCH})
           for name in SITE BACKEND PHOTO_SOURCE PHOTO_BUCKET LOCALES; do
             value=$(jq -er --arg name "$name" '.[$name] | select(type == "string" and length > 0)' <<< "$CONFIG") || {
               printf 'Missing or invalid configuration value: %s\n' "$name" >&2
