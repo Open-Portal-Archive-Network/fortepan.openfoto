@@ -4,7 +4,6 @@ import throttle from "lodash/throttle"
 import config from "../../data/siteConfig"
 import { lang, trigger, getURLParams, isElementInViewport } from "../../js/utils"
 import photoManager from "../../js/photo-manager"
-import searchAPI from "../../api/search"
 
 export default class extends Controller {
   static get targets() {
@@ -28,15 +27,8 @@ export default class extends Controller {
       // populate page content for the first time
       this.onPopState()
     } else {
-      // select a random id (that will open the carousel)
-      searchAPI.getRandom().then(result => {
-        if (result && result.items && result.items.length > 0 && result.items[0].mid) {
-          trigger("photos:historyPushState", { url: `?id=${result.items[0].mid}` })
-        } else {
-          // fallback if the above doesn't work for some reason
-          this.onPopState()
-        }
-      })
+      // populate the default photo grid without opening a photo
+      this.onPopState()
     }
   }
 
@@ -100,14 +92,16 @@ export default class extends Controller {
       if (
         photoManager.getFirstPhotoDataInContext() &&
         this.element.scrollTop <= thumbnails[0].offsetTop + viewportOffsetTop &&
-        thumbnails[0].classList.contains("is-loaded", "is-visible")
+        thumbnails[0].classList.contains("is-loaded") &&
+        thumbnails[0].classList.contains("is-visible")
       ) {
         // if we scrolled to the top
         year = thumbnails[0].year
       } else if (
         photoManager.getLastPhotoDataInContext() &&
         this.element.scrollTop + this.element.offsetHeight >= this.element.scrollHeight - 100 &&
-        thumbnails[thumbnails.length - 1].classList.contains("is-loaded", "is-visible")
+        thumbnails[thumbnails.length - 1].classList.contains("is-loaded") &&
+        thumbnails[thumbnails.length - 1].classList.contains("is-visible")
       ) {
         // if we scrolled to the bottom
         year = thumbnails[thumbnails.length - 1].year
@@ -195,16 +189,18 @@ export default class extends Controller {
 
     if (photoManager.hasData()) {
       if (insertBefore) {
-        params.search_after = photoManager.getFirstPhotoData().search_after
+        const firstPhoto = photoManager.getFirstPhotoData()
+        params.offset = Math.max(0, firstPhoto.order - params.size)
+        if (params.offset === 0) params.size = firstPhoto.order
         params.reverseOrder = true
       } else {
-        params.search_after = photoManager.getLastPhotoData().search_after
+        params.offset = photoManager.getLastPhotoData().order + 1
       }
 
       // not passing id on once the first round of data loading happened
       delete params.id
     } else {
-      params.from = 0
+      params.offset = 0
 
       // set up the search field on the first load of a search (not on infinite scroll loads)
       setTimeout(() => trigger("search:syncWithURL"), 20)
