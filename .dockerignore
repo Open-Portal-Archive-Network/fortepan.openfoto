@@ -1,0 +1,8 @@
+.git
+node_modules
+_dist
+_compiled-assets
+.env
+.netlify
+SESSION-NOTES.md
+src/data/siteConfig.js

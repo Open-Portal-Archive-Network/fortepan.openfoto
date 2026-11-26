@@ -1,22 +1,17 @@
 // In development a personal key can be set in .env (GOOGLE_MAPS_KEY_DEV),
 // because the production key only allows the live site's domain.
 // .env is loaded in .eleventy.js, as this file is also bundled for the browser
-const useDevMapsKey =
-  process.env.ENV === "development" && typeof process !== "undefined" && process.env.GOOGLE_MAPS_KEY_DEV
-
 module.exports = {
   ENV: process.env.ENV,
-  GOOGLE_MAPS_KEY: useDevMapsKey ? process.env.GOOGLE_MAPS_KEY_DEV : "",
-  GOOGLE_MAPS_ID: useDevMapsKey ? process.env.GOOGLE_MAPS_ID_DEV || "DEMO_MAP_ID" : "",
-  SITE: "https://example.com",
-  SITE_DEV: "https://example.com",
+  GOOGLE_MAPS_KEY: process.env.GOOGLE_MAPS_KEY,
+  GOOGLE_MAPS_ID: process.env.GOOGLE_MAPS_ID,
+  SITE: process.env.SITE,
   // In development, API calls go to the local dev server, which proxies them
   // to DEV_API_PROXY_TARGET (see .eleventy.js) to avoid CORS on localhost
-  BACKEND: process.env.ENV === "development" ? "" : "https://api.example.com",
-  BACKEND_DEV: process.env.ENV === "development" ? "" : "https://testapi.example.com",
+  BACKEND: process.env.BACKEND,
   DEV_API_PROXY_TARGET: "https://testapi.example.com",
-  PHOTO_SOURCE: "https://example.cloudfront.net",
-  PHOTO_BUCKET: "example",
+  PHOTO_SOURCE: process.env.PHOTO_SOURCE,
+  PHOTO_BUCKET: process.env.PHOTO_BUCKET,
   THUMBNAILS_QUERY_LIMIT: 40,
   BREAKPOINT_PHONE_XS: 360,
   BREAKPOINT_PHONE_SM: 480,
@@ -26,12 +21,13 @@ module.exports = {
   BREAKPOINT_DESKTOP_LG: 1220,
   CAROUSEL_SLIDESHOW_DELAY: 4000,
   DEFAULT_THEME: "light",
-  LOCALES: [
-    { code: "en", text: "English" },
-    { code: "hu", text: "Magyar" },
-    { code: "it", text: "Italian" },
-    { code: "pl", text: "Polska" },
-    { code: "fr", text: "Français" },
-  ],
+  LOCALES: process.env.LOCALES ? JSON.parse(process.env.LOCALES) : [],
+  // [
+  //   { code: "en", text: "English" },
+  //   { code: "hu", text: "Magyar" },
+  //   { code: "it", text: "Italian" },
+  //   { code: "pl", text: "Polska" },
+  //   { code: "fr", text: "Français" },
+  // ],
   AGE_RESTRICTION_TAG: "18+",
 }

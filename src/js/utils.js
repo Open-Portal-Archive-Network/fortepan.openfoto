@@ -102,12 +102,7 @@ export const getURLParams = () => {
 }
 
 export const getOrg = () => {
-  const locationArr = window.location.hostname.split(".")
-  if (locationArr.length <= 2) {
-    // we are on localhost or bare domain
-    return null
-  }
-  return locationArr[0]
+  return window.location.hostname
 }
 
 export const getPrettyURLValues = path => {
